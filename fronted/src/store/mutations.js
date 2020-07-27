@@ -13,6 +13,8 @@ const mutations = {
   [USER_LOGOUT](state) {
     state.isLogin = false
     state.account = ''
+    state.Authorization = ''
+    localStorage.removeItem('Authorization')
   }
 }
 

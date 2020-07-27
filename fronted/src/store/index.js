@@ -7,7 +7,8 @@ Vue.use(Vuex)
 
 const state = {
   isLogin: true,
-  account: 'zhangsan'
+  account: 'zhangsan',
+  Authorization: localStorage.getItem('Authorization') || '' 
 }
 
 const store = new Vuex.Store({

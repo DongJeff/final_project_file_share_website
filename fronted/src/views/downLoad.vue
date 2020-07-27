@@ -33,7 +33,11 @@
                 id="way" 
               />
               <span class="dot">.</span>
-              <el-select v-model="fileExtend" size="mini">
+              <el-select 
+                v-model="fileExtend" 
+                size="mini" 
+                placeholder="file ext"
+              >
                 <el-option
                   v-for="item in extendNames"
                   :key="item.value"

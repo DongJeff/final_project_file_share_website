@@ -102,10 +102,12 @@ export default {
         if(vaild) {
           this.axios.post(api.signup).then(res => {
             this.$router.push('/')
-            this.$store.dispatch('login', res.account)
+            this.$store.dispatch('login', {
+              account: res.account,
+              token: 'Bearer ' + res.token
+            })
           })
         }else {
-          console.log('error submit')
           return false
         }
       })

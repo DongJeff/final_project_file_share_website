@@ -7,7 +7,7 @@
       label-width="80px"
     >
       <el-form-item label="Account:">
-        <el-input v-model="form.account"></el-input>
+        <el-input v-model="form.account" />
       </el-form-item>
       <el-form-item label="Password:">
         <el-input 

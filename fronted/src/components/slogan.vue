@@ -3,9 +3,9 @@
     class="slogan" 
     :style="{ fontSize: fontSize + 'px',lineHeight: lineHeight }"
   >
-    告别公共电脑u盘中毒
+    Farewell to public computer U disk poisoning
     <br>
-    防止账号被盗
+    Prevent account theft
   </p>
 </template>
 

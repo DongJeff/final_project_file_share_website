@@ -40,6 +40,15 @@ Vue.use(Option)
 axios.defaults.baseURL = '/api'
 axios.defaults.timeout = 8000
 
+axios.interceptors.request.use(config => {
+  if(localStorage.getItem('Authorization')) {
+    config.header.Authorization = localStorage.getItem('Authorization')
+  }
+  return config
+}, error => {
+  return Promise.reject(error)
+})
+
 axios.interceptors.response.use(response => {
   let res = response.data
   if(res.status === 0) {
