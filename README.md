@@ -5,6 +5,7 @@
 - Python3
 - Django
 - MongoDB
+**pip3 install django djangorestframework djongo**
 
 ## Fronted
 - Vue
