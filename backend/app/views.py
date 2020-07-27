@@ -79,14 +79,18 @@ class FileView(APIView):
         file_info.create_user = user.username
         file_info.download_count = 0
         file_info.file_size = file.size
+        # If the user is not vip, the upload file size will be limited to 10MB
         if not vip_validate(user):
-            # file size is larger than 10MB
             if file.size / 1024 / 1024 > 10:
                 return JsonResponse(
                     {'code': 400,
                      'msg': "File size cannot be larger than 10MB, if you want to upload larger file, be a VIP !"})
         file_info.file = file
-        file_info.file_expire_time = utils.get_current_time() + datetime.timedelta(days=1)
+        # If the user is vip, he/she can keep the file more than 1 day
+        file_keep_day = 1
+        if vip_validate(user):
+            file_keep_day = 30
+        file_info.file_expire_time = utils.get_current_time() + datetime.timedelta(days=file_keep_day)
         file_info.save()
 
         return JsonResponse({'code': 200, 'msg': "success", 'share_code': file_info.share_code})
@@ -99,7 +103,7 @@ def vip_validate(user: User):
         return False
     if not user.vip:
         return False
-    return utils.is_expired(user.vip_expire_time)
+    return not utils.is_expired(user.vip_expire_time)
 
 
 def get_user(request):
@@ -123,3 +127,29 @@ class TestView(APIView):
         except Exception as e:
             return JsonResponse({'code': 400, 'msg': e.args[0]})
         return JsonResponse({'code': 200, 'msg': "success"})
+
+
+class VipView(APIView):
+    # Check the user is vip or not
+    def get(self, request):
+        try:
+            user = get_user(request)
+        except Exception as e:
+            return JsonResponse({'code': 400, 'msg': e.args[0]})
+        return JsonResponse({'code': 200, 'msg': "success", 'is_vip': vip_validate(user)})
+
+    # simply simulate the user to top up
+    def post(self, request):
+        try:
+            user = get_user(request)
+            charge = int(request.data['charge'])
+        except Exception as e:
+            return JsonResponse({'code': 400, 'msg': e.args[0]})
+
+        if charge < 10:
+            return JsonResponse({'code': 440, 'msg': "it's not enough"})
+        user.vip = True
+        user.vip_create_time = utils.get_current_time()
+        user.vip_expire_time = user.vip_create_time + datetime.timedelta(days=30)
+        user.save()
+        return JsonResponse({'code': 200, 'msg': "success! you are vip now!"})
