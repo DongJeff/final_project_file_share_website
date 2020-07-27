@@ -25,6 +25,7 @@ def path_and_rename(instance, filename):
 class FileInfo(models.Model):
     share_code = models.CharField(max_length=100, unique=True)
     file_size = models.IntegerField()
+    file_name = models.CharField(max_length=100)
     download_count = models.IntegerField()
     create_user = models.CharField(max_length=100)
     file_expire_time = models.DateTimeField()

@@ -1,14 +1,8 @@
-from django.shortcuts import render
-from rest_framework.parsers import MultiPartParser, FileUploadParser
+from rest_framework.parsers import FileUploadParser
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from app.models import User
-from django.http import JsonResponse
-import time
+from django.http import JsonResponse, HttpResponse
 from app.serializers import *
 import datetime
-from pymongo.errors import *
 import app.utils as utils
 
 
@@ -47,12 +41,12 @@ class RegisterView(APIView):
 class FileView(APIView):
     parser_classes = (FileUploadParser,)
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         try:
             user = get_user(request)
         except Exception as e:
             return JsonResponse({'code': 400, 'msg': e.args[0]})
-        share_code = request.data['share_code']
+        share_code = request.query_params['share_code']
         try:
             file_info = FileInfo.objects.get(share_code=share_code)
         except FileInfo.DoesNotExist:
@@ -60,6 +54,16 @@ class FileView(APIView):
         if utils.is_expired(file_info.file_expire_time):
             return JsonResponse({'code': 400, 'msg': "the file has expired"})
 
+        file_path = str(file_info.file)
+        with open(file_path, 'rb') as f:
+            file = f.read()
+        response = HttpResponse(file)
+        response['Content-Type'] = 'application/octet-stream'
+        file_name = file_info.file_name
+        response['Content-Disposition'] = 'attachment;filename="%s"' % file_name
+        file_info.download_count += 1
+        file_info.save()
+        return response
 
     def put(self, request, *args, **kwargs):
         try:
@@ -71,14 +75,31 @@ class FileView(APIView):
 
         file_info = FileInfo()
         file_info.share_code = utils.generate_share_code()
+        file_info.file_name = file.name
         file_info.create_user = user.username
         file_info.download_count = 0
         file_info.file_size = file.size
+        if not vip_validate(user):
+            # file size is larger than 10MB
+            if file.size / 1024 / 1024 > 10:
+                return JsonResponse(
+                    {'code': 400,
+                     'msg': "File size cannot be larger than 10MB, if you want to upload larger file, be a VIP !"})
         file_info.file = file
         file_info.file_expire_time = utils.get_current_time() + datetime.timedelta(days=1)
         file_info.save()
 
         return JsonResponse({'code': 200, 'msg': "success", 'share_code': file_info.share_code})
+
+
+def vip_validate(user: User):
+    if user.vip is None:
+        user.vip = False
+        user.save()
+        return False
+    if not user.vip:
+        return False
+    return utils.is_expired(user.vip_expire_time)
 
 
 def get_user(request):
