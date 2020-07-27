@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url
+from app.views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
+    url(r'^register/$', RegisterView.as_view(), name="register"),
+    url(r'^login/$', LoginView.as_view(), name="login"),
+    url(r'^file/$', FileView.as_view(), name="file"),
+    url(r'^test/$', TestView.as_view(), name="test")
 ]
