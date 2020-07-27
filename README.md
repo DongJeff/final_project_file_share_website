@@ -5,7 +5,10 @@
 - Python3
 - Django
 - MongoDB
-**pip3 install django djangorestframework djongo**
+
+**pip3 install django djangorestframework djongo django-cors-headers**
+
+**python3 manage.py runserver 0.0.0.0:8000**
 
 ## Fronted
 - Vue
