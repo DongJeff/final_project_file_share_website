@@ -6,9 +6,6 @@
 - Django
 - MongoDB
 
-**pip3 install django djangorestframework djongo django-cors-headers**
-
-**python3 manage.py runserver 0.0.0.0:8000**
 
 ## Fronted
 - Vue
@@ -68,3 +65,12 @@ GET http://127.0.0.1:8000/file/?share_code=
 headers:{'token':''}
 ```
 ![download](img/Snipaste_2020-07-28_01-36-45.png)
+
+
+## How to run
+```shell script
+pip3 install django djangorestframework djongo django-cors-headers sqlparse==0.2.4
+python3 manage.py migrate 
+python3 manage.py makemigrations app
+python3 manage.py runserver 0.0.0.0:8000
+```
