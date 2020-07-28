@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^login/$', LoginView.as_view(), name="login"),
     url(r'^file/$', FileView.as_view(), name="file"),
     url(r'^vip/$', VipView.as_view(), name="vip"),
-    url(r'^test/$', TestView.as_view(), name="test")
+    url(r'^test/$', TestView.as_view(), name="test"),
+    url(r'^index/$', IndexView.as_view(), name="index")
 ]

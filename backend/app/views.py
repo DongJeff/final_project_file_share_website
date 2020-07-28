@@ -2,8 +2,14 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.views import APIView
 from django.http import JsonResponse, HttpResponse
 from app.serializers import *
+from django.shortcuts import render
 import datetime
 import app.utils as utils
+
+
+class IndexView(APIView):
+    def get(self, request):
+        return render(request, 'index.html')
 
 
 class LoginView(APIView):
@@ -68,7 +74,7 @@ class FileView(APIView):
         file_info.save()
         return response
 
-    def put(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         try:
             user = get_user(request)
         except Exception as e:
