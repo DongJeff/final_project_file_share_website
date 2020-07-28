@@ -11,7 +11,10 @@ class LoginView(APIView):
         ser = LoginFormSerializer(data=request.data)
         if not ser.is_valid():
             return JsonResponse({'code': 400, 'msg': ser.errors})
-        user = User.objects.get(username=ser.data['username'])
+        try:
+            user = User.objects.get(username=ser.data['username'])
+        except User.DoesNotExist:
+            return JsonResponse({'code': 401, 'msg': 'username or password error'})
         if user.password == ser.data['password']:
             now = utils.get_current_time()
             user.token = utils.generate_token()
