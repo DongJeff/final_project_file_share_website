@@ -62,8 +62,8 @@ axios.interceptors.response.use(
             // console.log("inter->" + response.data)
             return Promise.resolve(response.data);
         } else if (response.data.code === 401) {
-            console.log("im in")
             store.dispatch('logout').then(r => {
+				console.log(r)
                 Message({
                     message: "token is not valid",
                     type: 'warning'
