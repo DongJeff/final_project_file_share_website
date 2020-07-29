@@ -30,7 +30,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = ()
 CORS_ALLOW_HEADERS = (
     'token',
-    'Content-Disposition'
+    'Content-Disposition',
+    'Content-Type'
 )
 CORS_EXPOSE_HEADERS = (
     'Content-Disposition',
