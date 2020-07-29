@@ -38,7 +38,7 @@ Vue.use(Select)
 Vue.use(Option)
 
 // axios.defaults.baseURL = 'http://172.19.9.111:8000/'
-axios.defaults.baseURL = 'http://192.168.0.141:8000'
+// axios.defaults.baseURL = 'http://192.168.0.141:8000'
 
 axios.interceptors.request.use(
     config => {
@@ -54,16 +54,13 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     response => {
-        console.log(response)
         if (response.data.code === undefined) {
             return Promise.resolve(response);
         }
         if (response.data.code === 200) {
-            // console.log("inter->" + response.data)
             return Promise.resolve(response.data);
         } else if (response.data.code === 401) {
-            store.dispatch('logout').then(r => {
-				console.log(r)
+            store.dispatch('logout').then(() => {
                 Message({
                     message: "token is not valid",
                     type: 'warning'
@@ -71,7 +68,6 @@ axios.interceptors.response.use(
                 router.push('/')
             })
         } else {
-            // console.log("im in")
             Message({
                 message: response.data.msg,
                 type: 'error'

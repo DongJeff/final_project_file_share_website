@@ -16,10 +16,20 @@
                 >
                     {{ navList[1].name }}
                 </li>
+                <li 
+                    @click="navItemClickHandler(navList[2])"
+                    v-if="isLogin"
+                >
+                    Vip
+                </li>
 
             </ul>
             <div class="login-info" v-if="isLogin">
-                <span>Welcome,{{isVip?'vip':''}} {{ account }}!</span>
+                <span>
+                    Welcome
+                    <strong class="vip"> {{isVip?'vip':''}} </strong>
+                    {{ account }}!
+                </span>
                 <span>|</span>
                 <span @click="logout">Log out</span>
             </div>
@@ -45,6 +55,11 @@
                         id: 1,
                         name: 'download files',
                         link: '/download'
+                    },
+                    {
+                        id: 2,
+                        name: 'vip',
+                        link: '/vip'
                     }
                 ]
             }
@@ -129,5 +144,8 @@
                 }
             }
         }
+    }
+    .vip {
+        color: #23A7F2;
     }
 </style>

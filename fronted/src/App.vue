@@ -19,13 +19,16 @@ export default {
     CloudFooter
   },
   created() {
-    console.log(localStorage.getItem('Authorization'))
     if(localStorage.getItem('Authorization')) {
       this.axios({
         method: 'get',
         url: api.vip,
         headers: {
           'token': localStorage.getItem('Authorization')
+        }
+      }).then(res => {
+        if(res.is_vip) {
+          this.$store.dispatch('beVip')
         }
       })
     }

@@ -43,7 +43,6 @@
     import SuccessTip from '../components/successTip'
     import api from '../api/index'
     import axios from "axios";
-    import {Message} from "element-ui";
 
     export default {
         name: 'UploadFile',
