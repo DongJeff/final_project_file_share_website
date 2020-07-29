@@ -13,7 +13,7 @@
                 ref="upload"
                 drag
                 :limit="1"
-                action="http://zht.pwiki.ml:8000/file/"
+                :action="action"
                 :headers="headers"
                 :file-list="fileList"
                 auto-upload
@@ -42,6 +42,8 @@
     import ExtractCode from '../components/extractCode'
     import SuccessTip from '../components/successTip'
     import api from '../api/index'
+    import axios from "axios";
+    import {Message} from "element-ui";
 
     export default {
         name: 'UploadFile',
@@ -56,7 +58,7 @@
                 password: '',
                 iShowSuccessTips: false,
                 filename: '',
-                action: api.upload,
+                action: axios.defaults.baseURL + api.upload,
                 headers: {
                     'token': localStorage.getItem('Authorization'),
                 },
@@ -67,17 +69,30 @@
             beforeUpLoadHandler(file) {
                 if (!this.$store.state.isVip && file.size / 1024 / 1024 > 10) {
                     this.$message({
-                        message: 'file shoud less then 10MB',
+                        message: 'You are not vip, upload file should less then 10MB',
                         type: 'warning'
                     })
+                    return false
                 }
                 this.headers['Content-Disposition'] = `attachment; filename=${file.name}`
             },
             successHandler(response) {
+                this.fileList = []
+                console.log("--->"+JSON.stringify(response))
+                if (response.code===401){
+                    this.$store.dispatch('logout')
+                    this.$router.push({path: "/"})
+                    this.$message({
+                        message: "token is not valid",
+                        type: 'warning'
+                    })
+                }
                 this.code = response.share_code
                 this.iShowSuccessTips = true
             },
-            errorHandler() {
+            errorHandler(response) {
+                this.fileList = []
+                console.log("--->"+JSON.stringify(response))
                 this.$message({
                     message: 'upload failed',
                     type: 'error'

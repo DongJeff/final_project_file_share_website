@@ -37,11 +37,12 @@ Vue.use(Input)
 Vue.use(Select)
 Vue.use(Option)
 
-axios.defaults.baseURL = 'http://zht.pwiki.ml:8000/'
+// axios.defaults.baseURL = 'http://172.19.9.111:8000/'
+axios.defaults.baseURL = 'http://192.168.0.141:8000'
 
 axios.interceptors.request.use(
     config => {
-        const token = window.localStorage.getItem("token");
+        const token = window.localStorage.getItem("Authorization");
         token && (config.headers['token'] = token);
         return config;
     },
@@ -53,14 +54,24 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     response => {
+        console.log(response)
         if (response.data.code === undefined) {
             return Promise.resolve(response);
         }
         if (response.data.code === 200) {
             // console.log("inter->" + response.data)
             return Promise.resolve(response.data);
-        } else {
+        } else if (response.data.code === 401) {
             console.log("im in")
+            store.dispatch('logout').then(r => {
+                Message({
+                    message: "token is not valid",
+                    type: 'warning'
+                })
+                router.push('/')
+            })
+        } else {
+            // console.log("im in")
             Message({
                 message: response.data.msg,
                 type: 'error'
