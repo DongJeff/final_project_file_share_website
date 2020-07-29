@@ -20,10 +20,10 @@ from app.views import *
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    url(r'^register/$', RegisterView.as_view(), name="register"),
-    url(r'^login/$', LoginView.as_view(), name="login"),
-    url(r'^file/$', FileView.as_view(), name="file"),
-    url(r'^vip/$', VipView.as_view(), name="vip"),
-    url(r'^test/$', TestView.as_view(), name="test"),
-    url(r'^index/$', IndexView.as_view(), name="index")
+    url(r'^register$', RegisterView.as_view(), name="register"),
+    url(r'^login$', LoginView.as_view(), name="login"),
+    url(r'^file$', FileView.as_view(), name="file"),
+    url(r'^vip$', VipView.as_view(), name="vip"),
+    url(r'^test$', TestView.as_view(), name="test"),
+    url(r'^index$', IndexView.as_view(), name="index")
 ]

@@ -32,6 +32,9 @@ CORS_ALLOW_HEADERS = (
     'token',
     'Content-Disposition'
 )
+CORS_EXPOSE_HEADERS = (
+    'Content-Disposition',
+)
 CORS_ALLOW_METHODS = (
     'DELETE',
     'GET',
@@ -72,7 +75,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'backend.urls'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -145,3 +147,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]

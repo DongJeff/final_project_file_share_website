@@ -48,13 +48,13 @@ class RegisterView(APIView):
 
 
 class FileView(APIView):
-    parser_classes = (FileUploadParser,)
+    # parser_classes = (FileUploadParser,)
 
     def get(self, request):
         try:
             user = get_user(request)
         except Exception as e:
-            return JsonResponse({'code': 400, 'msg': e.args[0]})
+            return JsonResponse({'code': 401, 'msg': e.args[0]})
         share_code = request.query_params['share_code']
         try:
             file_info = FileInfo.objects.get(share_code=share_code)
@@ -69,7 +69,7 @@ class FileView(APIView):
         response = HttpResponse(file)
         response['Content-Type'] = 'application/octet-stream'
         file_name = file_info.file_name
-        response['Content-Disposition'] = 'attachment;filename="%s"' % file_name
+        response['Content-Disposition'] = 'attachment;filename=%s' % file_name
         file_info.download_count += 1
         file_info.save()
         return response
@@ -78,7 +78,7 @@ class FileView(APIView):
         try:
             user = get_user(request)
         except Exception as e:
-            return JsonResponse({'code': 400, 'msg': e.args[0]})
+            return JsonResponse({'code': 401, 'msg': e.args[0]})
 
         file = request.data['file']
 
@@ -134,7 +134,7 @@ class TestView(APIView):
         try:
             user = get_user(request)
         except Exception as e:
-            return JsonResponse({'code': 400, 'msg': e.args[0]})
+            return JsonResponse({'code': 401, 'msg': e.args[0]})
         return JsonResponse({'code': 200, 'msg': "success"})
 
 
@@ -144,16 +144,16 @@ class VipView(APIView):
         try:
             user = get_user(request)
         except Exception as e:
-            return JsonResponse({'code': 400, 'msg': e.args[0]})
+            return JsonResponse({'code': 401, 'msg': e.args[0]})
         return JsonResponse({'code': 200, 'msg': "success", 'is_vip': vip_validate(user)})
 
     # simply simulate the user to top up
     def post(self, request):
         try:
             user = get_user(request)
-            charge = int(request.data['charge'])
         except Exception as e:
-            return JsonResponse({'code': 400, 'msg': e.args[0]})
+            return JsonResponse({'code': 401, 'msg': e.args[0]})
+        charge = int(request.data['charge'])
 
         if charge < 10:
             return JsonResponse({'code': 440, 'msg': "it's not enough"})
@@ -162,3 +162,4 @@ class VipView(APIView):
         user.vip_expire_time = user.vip_create_time + datetime.timedelta(days=30)
         user.save()
         return JsonResponse({'code': 200, 'msg': "success! you are vip now!"})
+

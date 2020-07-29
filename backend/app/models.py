@@ -30,3 +30,4 @@ class FileInfo(models.Model):
     create_user = models.CharField(max_length=100)
     file_expire_time = models.DateTimeField()
     file = models.FileField(upload_to=path_and_rename)
+
