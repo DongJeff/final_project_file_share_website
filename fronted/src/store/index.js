@@ -6,9 +6,10 @@ import actions from './actions'
 Vue.use(Vuex)
 
 const state = {
-  isLogin: true,
-  account: 'zhangsan',
-  Authorization: localStorage.getItem('Authorization') || '' 
+  isLogin: localStorage.getItem('Authorization') ? true : false,
+  account: localStorage.getItem('cloudUser') || '' ,
+  Authorization: localStorage.getItem('Authorization') || '',
+  isVip: false
 }
 
 const store = new Vuex.Store({

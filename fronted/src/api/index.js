@@ -1,5 +1,8 @@
 export default {
-  login: '/user/login',
-  logout: '/user/logout',
-  signup: '/user/signup'
+    login: '/login/',
+    logout: 'logout/',
+    register: '/register/',
+    vip: '/vip/',
+    download: '/file/',
+    upload: '/file'
 }

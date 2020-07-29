@@ -3,14 +3,13 @@
     <div class="tip-card">
       <div class="tip-title">
         <span>Upload successfully</span>
-        <span title="close tips">x</span>
+        <span title="close tips" @click="$emit('close')">x</span>
       </div>
       <div class="upload-info">
-        <p>24小时内在提取页面下载</p>
-        <p>提取方式一:</p>
-        <p>凭文件名:Internet Download Manager Crack.exe提取</p>
-        <p>提取方式二:</p>
-        <p>凭提取码:<span class="highlight">st8fgu</span>提取</p>
+        <p>Share code:
+          <span class="highlight">{{shareCode}}</span>
+        </p>
+        <p>Please send it to others or remember it, you will need it when download.</p>
       </div>
       <div class="sure" @click="$emit('close')">OK</div>
     </div>
@@ -19,7 +18,13 @@
 
 <script>
 export default {
-  name: 'SuccessTip'
+  name: 'SuccessTip',
+  props: {
+    shareCode: {
+      type: String,
+      default: ''
+    }
+  }
 }
 </script>
 

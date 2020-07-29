@@ -100,12 +100,30 @@ export default {
     submitForm() {
       this.$refs.signUpForm.validate(vaild => {
         if(vaild) {
-          this.axios.post(api.signup).then(res => {
-            this.$router.push('/')
-            this.$store.dispatch('login', {
-              account: res.account,
-              token: 'Bearer ' + res.token
+          this.axios({
+            method: 'post',
+            url: api.register,
+            data: {
+              username: this.signForm.account,
+              password: this.signForm.password
+            },
+            transformRequest: [
+              function (data) {
+                let ret = ''
+                for (let it in data) {
+                    ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                }
+                ret = ret.substring(0, ret.lastIndexOf('&'));
+                return ret
+              }
+            ], 
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          }).then(() => {
+            this.$message({
+              message: 'register successfully',
+              type: 'success'
             })
+            this.$router.push('/')
           })
         }else {
           return false

@@ -7,24 +7,24 @@ import store from './store/index'
 import './assets/css/reset.css'
 import './assets/css/common.less'
 
-const isMock = true
+const isMock = false
 
-if(isMock) {
-  require('./mock/index')
+if (isMock) {
+    require('./mock/index')
 }
 
-import { 
-  Upload, 
-  Radio, 
-  RadioGroup,
-  Button,
-  Form,
-  FormItem,
-  Input,
-  Select,
-  Option,
-  Message,
-  MessageBox
+import {
+    Upload,
+    Radio,
+    RadioGroup,
+    Button,
+    Form,
+    FormItem,
+    Input,
+    Select,
+    Option,
+    Message,
+    MessageBox
 } from 'element-ui'
 
 Vue.use(Upload)
@@ -37,36 +37,39 @@ Vue.use(Input)
 Vue.use(Select)
 Vue.use(Option)
 
-axios.defaults.baseURL = '/api'
-axios.defaults.timeout = 8000
+axios.defaults.baseURL = 'http://zht.pwiki.ml:8000/'
 
-axios.interceptors.request.use(config => {
-  if(localStorage.getItem('Authorization')) {
-    config.header.Authorization = localStorage.getItem('Authorization')
-  }
-  return config
-}, error => {
-  return Promise.reject(error)
-})
+axios.interceptors.request.use(
+    config => {
+        const token = window.localStorage.getItem("token");
+        token && (config.headers['token'] = token);
+        return config;
+    },
+    error => {
+        return Promise.error(error);
+    }
+);
 
-axios.interceptors.response.use(response => {
-  let res = response.data
-  if(res.status === 0) {
-    return res.data
-  }else if(res.status === 10) {
-    window.location.href = '/#/'
-    return Promise.reject(res)
-  }else {
-    return Promise.reject(res)
-  }
-}, error => {
-  let res = error.response
-  Message({
-    message: res.msg,
-    type: 'error'
-  })
-  return Promise.reject(error)
-})
+
+axios.interceptors.response.use(
+    response => {
+        if (response.data.code === undefined) {
+            return Promise.resolve(response);
+        }
+        if (response.data.code === 200) {
+            // console.log("inter->" + response.data)
+            return Promise.resolve(response.data);
+        } else {
+            console.log("im in")
+            Message({
+                message: response.data.msg,
+                type: 'error'
+            })
+            return Promise.reject(response);
+        }
+    }
+);
+
 
 Vue.use(VueAxios, axios)
 
@@ -75,8 +78,10 @@ Vue.prototype.$confirm = MessageBox
 
 Vue.config.productionTip = false
 
+
 new Vue({
-  router,
-  store,
-  render: h => h(App),
+    router,
+    store,
+    render: h => h(App),
 }).$mount('#app')
+

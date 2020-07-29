@@ -1,6 +1,7 @@
 import { 
   USER_LOGIN, 
-  USER_LOGOUT 
+  USER_LOGOUT,
+  USER_VIP
 } from './mutations_type'
 
 const actions = {
@@ -9,6 +10,9 @@ const actions = {
   },
   logout(context) {
     context.commit(USER_LOGOUT)
+  },
+  beVip(context) {
+    context.commit(USER_VIP)
   }
 }
 

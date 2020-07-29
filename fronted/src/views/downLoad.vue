@@ -11,12 +11,12 @@
             </p>
             <div class="extract-method">
               <label for="way">key:</label>
-              <input 
-                class="common-input" 
-                id="way" 
+              <input
+                class="common-input"
+                id="way"
                 v-model="key"
               />
-              <span class="extract">
+              <span class="extract" @click="downloadByShareCode">
                 extract
               </span>
             </div>
@@ -27,15 +27,15 @@
             </p>
             <div class="extract-method">
               <label for="way">fileName:</label>
-              <input 
-                class="common-input" 
+              <input
+                class="common-input"
                 v-model="fileName"
-                id="way" 
+                id="way"
               />
               <span class="dot">.</span>
-              <el-select 
-                v-model="fileExtend" 
-                size="mini" 
+              <el-select
+                v-model="fileExtend"
+                size="mini"
                 placeholder="file ext"
               >
                 <el-option
@@ -46,15 +46,15 @@
                 </el-option>
                 <div class="other">
                   <label for="other-ext">other:</label>
-                  <input 
+                  <input
                     id="other-ext"
                     v-model="fileExtend"
                   />
                 </div>
               </el-select>
             </div>
-            <extract-code 
-              v-model="password" 
+            <extract-code
+              v-model="password"
               v-if="fileType === 'private'"
             />
             <div class="file-type">
@@ -66,7 +66,7 @@
                 <el-radio label="private">private file</el-radio>
               </el-radio-group>
             </div>
-            <div 
+            <div
               class="extract-button"
               :class="{ active: cloudExtract }"
             >
@@ -85,6 +85,8 @@
 <script>
 import Slogan from '../components/slogan'
 import ExtractCode from '../components/extractCode'
+import api from "../api";
+// import api from '../api/index'
 export default {
   name: 'DownLoad',
   components: {
@@ -154,6 +156,35 @@ export default {
         return flag
       }
       return flag && this.password
+    }
+  },
+  methods: {
+    downloadByShareCode() {
+      if(!this.key) {
+        return this.$message({
+          message: 'please enter the key',
+          type: 'info'
+        })
+      }
+      this.axios({
+        method: 'get',
+        url: api.download,
+        data: {
+          username: this.form.account,
+          password: this.form.password
+        },
+        transformRequest: [
+          function (data) {
+            let ret = ''
+            for (let it in data) {
+              ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+            }
+            ret = ret.substring(0, ret.lastIndexOf('&'));
+            return ret
+          }
+        ],
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      })
     }
   }
 }

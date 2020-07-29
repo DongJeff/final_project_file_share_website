@@ -13,7 +13,7 @@
         </li>
       </ul>
       <div class="login-info" v-if="isLogin">
-        <span >Welcome, {{ account }}!</span>
+        <span >Welcome,{{isVip?'vip':''}} {{ account }}!</span>
         <span>|</span>
         <span @click="logout">Log out</span>
       </div>
@@ -63,7 +63,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isLogin', 'account'])
+    ...mapState(['isLogin', 'account', 'isVip'])
   }
 }
 </script>

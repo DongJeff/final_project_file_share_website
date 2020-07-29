@@ -11,11 +11,24 @@
 <script>
 import CloudHeader from './components/header'
 import CloudFooter from './components/footer'
+import api from './api/index'
 export default {
   name: 'App',
   components: {
     CloudHeader,
     CloudFooter
+  },
+  created() {
+    console.log(localStorage.getItem('Authorization'))
+    if(localStorage.getItem('Authorization')) {
+      this.axios({
+        method: 'get',
+        url: api.vip,
+        headers: {
+          'token': localStorage.getItem('Authorization')
+        }
+      })
+    }
   }
 }
 </script>
