@@ -70,7 +70,12 @@ headers:{'token':''}
 ## How to run
 ```shell script
 pip3 install django djangorestframework djongo django-cors-headers sqlparse==0.2.4
-python3 manage.py migrate 
 python3 manage.py makemigrations app
+python3 manage.py migrate 
 python3 manage.py runserver 0.0.0.0:8000
+```
+
+```
+npm install
+npm run serve
 ```
